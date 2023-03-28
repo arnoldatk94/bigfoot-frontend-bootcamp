@@ -6,9 +6,7 @@ import { BACKEND_URL } from "../constants";
 
 export default function SightingPreviewList() {
   const [sightings, setSightings] = useState();
-  const [search, setSearch] = useSearchParams();
-
-  let { sightingsIndex } = useParams;
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     axios.get(`${BACKEND_URL}/sightings`).then((response) => {
@@ -16,24 +14,38 @@ export default function SightingPreviewList() {
     });
   }, []);
 
+  useEffect(() => {
+    console.log(sightings);
+    // let temp = sightings.filter((item) => item.YEAR.includes(search));
+    // console.log(temp);
+    if (sightings) {
+      for (let i of sightings) {
+        console.log(i.YEAR);
+      }
+    }
+  }, [sightings]);
+
   return (
     <div>
+      <Button href="/filter/">Search</Button>
       <Form.Control
-        placeholder="Search"
+        placeholder="Search by year"
         type="text"
         onChange={(e) => setSearch(e.target.value)}
       />
       {sightings && sightings.length > 0
-        ? sightings.map((test, index) => (
-            <Card key={index} bg={"dark"}>
-              <Card.Title>
-                {test.YEAR} {test.SEASON}
-              </Card.Title>
-              <Card.Body>
-                <Button href={`/sightings/${index}`}>More info</Button>
-              </Card.Body>
-            </Card>
-          ))
+        ? sightings
+            .filter((item) => item.YEAR?.includes(search))
+            .map((test, index) => (
+              <Card key={index} bg={"dark"}>
+                <Card.Title>
+                  {test.YEAR} {test.SEASON}
+                </Card.Title>
+                <Card.Body>
+                  <Button href={`/sightings/${index}`}>More info</Button>
+                </Card.Body>
+              </Card>
+            ))
         : null}
     </div>
   );
