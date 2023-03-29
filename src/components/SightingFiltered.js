@@ -1,17 +1,19 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ListGroup, Card, Button, Form } from "react-bootstrap";
+import { useSearchParams } from "react-router-dom";
 
 import { BACKEND_URL } from "../constants.js";
 
 export default function SightingFiltered() {
-  const [year, setYear] = useState("1990");
+  const [year, setYear] = useState("");
   const [sighting, setSighting] = useState();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState();
+  let [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    console.log("sightings filtered");
-    console.log("year", year);
+    // console.log("sightings filtered");
+    // console.log("year", year);
     if (year) {
       axios.get(`${BACKEND_URL}/sightings/filter/${year}`).then((response) => {
         setSighting(response.data);
@@ -27,6 +29,7 @@ export default function SightingFiltered() {
       <Button
         onClick={() => {
           setYear(search);
+          setSearchParams(year);
         }}
       >
         Search by year

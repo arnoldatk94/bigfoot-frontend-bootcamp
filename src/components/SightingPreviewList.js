@@ -14,16 +14,16 @@ export default function SightingPreviewList() {
     });
   }, []);
 
-  useEffect(() => {
-    console.log(sightings);
-    // let temp = sightings.filter((item) => item.YEAR.includes(search));
-    // console.log(temp);
-    if (sightings) {
-      for (let i of sightings) {
-        console.log(i.YEAR);
-      }
-    }
-  }, [sightings]);
+  // useEffect(() => {
+  //   console.log(sightings);
+  //   let temp = sightings.filter((item) => item.YEAR.includes(search));
+  //   console.log(temp);
+  //   if (sightings) {
+  //     for (let i of sightings) {
+  //       console.log(i.YEAR);
+  //     }
+  //   }
+  // }, [sightings]);
 
   return (
     <div>
