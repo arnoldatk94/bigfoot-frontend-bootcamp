@@ -1,44 +1,67 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { ListGroup, Card, Button, Form } from "react-bootstrap";
+import { ListGroup, Card, Button, Form, FormControl } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 
 import { BACKEND_URL } from "../constants.js";
 
 export default function SightingFiltered() {
-  const [year, setYear] = useState("");
+  // const [year, setYear] = useState("");
   const [sighting, setSighting] = useState();
-  const [search, setSearch] = useState();
-  let [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
-    // console.log("sightings filtered");
-    // console.log("year", year);
-    if (year) {
-      axios.get(`${BACKEND_URL}/sightings/filter/${year}`).then((response) => {
+  // let [searchParams, setSearchParams] = useSearchParams();
+  const [bigFootQuery, setBigFootQuery] = useState({});
+
+  const callApi = () => {
+    axios
+      .get(`${BACKEND_URL}/sightings/filter/`, {
+        params: {
+          SEASON: bigFootQuery.SEASON,
+          YEAR: bigFootQuery.YEAR,
+        },
+      })
+      .then((response) => {
         setSighting(response.data);
       });
-    }
-  }, [year]);
+  };
+
+  // useEffect(() => {
+  //   if (year) {
+  //     axios
+  //       .get(`${BACKEND_URL}/sightings/filter/`, {
+  //         params: {
+  //           SEASON: bigFootQuery.SEASON,
+  //           YEAR: bigFootQuery.YEAR,
+  //         },
+  //       })
+  //       .then((response) => {
+  //         setSighting(response.data);
+  //       });
+  //   }
+  // }, [bigFootQuery]);
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setBigFootQuery({ ...bigFootQuery, [e.target.name]: value });
+  };
 
   return (
     <div>
-      <Button variant="success" href="/">
-        Home
+      <Button href="/">Home</Button>
+      <Button variant="success" onClick={callApi}>
+        Call API
       </Button>
-      <Button
-        onClick={() => {
-          setYear(search);
-          setSearchParams(year);
-        }}
-      >
-        Search by year
-      </Button>
-
       <Form.Control
-        placeholder="Search by year"
+        placeholder="Season"
+        name="SEASON"
         type="text"
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={handleChange}
+      />
+      <Form.Control
+        placeholder="Year"
+        name="YEAR"
+        type="text"
+        onChange={handleChange}
       />
 
       {sighting && sighting.length > 0
